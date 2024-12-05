@@ -43,6 +43,7 @@ SDKINCLUDES=\
 	    platform/driver/hw_otpc \
 	    platform/utilities/otp_hdr \
 	    platform/utilities/otp_cs \
+	    platform/system_library/include \
 	    platform/include \
 	    platform/include/CMSIS/5.9.0/CMSIS/Core/Include
 

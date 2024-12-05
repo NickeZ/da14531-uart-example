@@ -1,0 +1,4 @@
+*.o
+*.map
+firmware
+firmware.bin
