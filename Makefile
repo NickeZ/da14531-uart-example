@@ -23,7 +23,9 @@ SOURCES=\
 
 OBJECTS=$(notdir $(patsubst %.S,%.o,${SDK_ASS_SOURCES}) $(patsubst %.c,%.o,${SOURCES}))
 
-DEFINES=-D__DA14531__ -DCFG_UART_DMA_SUPPORT -D__NON_BLE_EXAMPLE__
+DEFINES=-D__DA14531__ \
+	-DCFG_UART_DMA_SUPPORT \
+	-D__NON_BLE_EXAMPLE__
 
 SDKINCLUDES=\
 	    include \
@@ -53,7 +55,7 @@ INCLUDE_DIRECTORIES=\
 
 CPPFLAGS=-mthumb -mcpu=cortex-m0plus ${DEFINES} ${INCLUDE_DIRECTORIES}
 
-CFLAGS=-Os -ffunction-sections -fdata-sections -Wall --specs=nano.specs --specs=nosys.specs
+CFLAGS=-Os -ffunction-sections -fdata-sections -Wall --specs=nano.specs --specs=nosys.specs -g3
 
 LDLIBS=${SDKPATH}/platform/system_library/output/Keil_5/da14531.lib --specs=nano.specs --specs=nosys.specs
 
@@ -61,14 +63,30 @@ LDFLAGS=-mthumb -mcpu=cortex-m0plus -Wl,-T,firmware.lds -Wl,--gc-sections -Wl,-M
 
 CC=arm-none-eabi-gcc
 
-firmware.bin: firmware
-	arm-none-eabi-objcopy -Obinary firmware firmware.bin
+firmware.o: firmware.bin
+	arm-none-eabi-objcopy -I binary -O elf32-littlearm --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
 
-firmware: ${OBJECTS}
-	${CC} ${LDFLAGS} -o firmware $^ ${LDLIBS}
+firmware.bin: firmware.elf
+	arm-none-eabi-objcopy -Obinary $< $@
+
+firmware.elf: ${OBJECTS}
+	${CC} ${LDFLAGS} -o $@ $^ ${LDLIBS}
+
+flash:
+	${MAKE} firmware.elf
+	JlinkExe -device da14531 -if SWD -speed 4000 -autoconnect 1 -CommandFile commands.jlink
+
+gdb-server:
+	JlinkGDBServer -device da14531 -if SWD -speed 4000
+
+jlink-cli:
+	JlinkExe -device da14531 -if SWD -speed 4000 -autoconnect 1
+
+run:
+	arm-none-eabi-gdb -x jlink.gdb firmware.elf
 
 clean:
-	rm -f *.o firmware firmware.bin output.map
+	rm -f *.o firmware.elf firmware.bin firmware.o output.map
 
 %.o : %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $(notdir $@)
