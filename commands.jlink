@@ -1,0 +1,5 @@
+h
+loadfile firmware.bin 0x07fc0000
+setpc 0x07fc0110
+wreg msp 0x07fcc000
+g

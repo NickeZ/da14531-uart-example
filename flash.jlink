@@ -1,0 +1,3 @@
+r
+loadfile firmware.elf
+q
