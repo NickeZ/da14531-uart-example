@@ -13,7 +13,7 @@ SDK_SOURCES=$(addprefix ${SDKPATH}/,\
 	    platform/arch/main/nmi_handler.c \
 	    platform/arch/boot/system_DA14531.c)
 
-SDK_ASS_SOURCES=$(addprefix ${SDKPATH}/platform/arch/boot/GCC/,startup_DA14531.S ivtable_DA14531.S)
+SDK_ASS_SOURCES=$(addprefix ${SDKPATH}/platform/arch/boot/GCC/,ivtable_DA14531.S startup_DA14531.S)
 
 VPATH=src $(dir ${SDK_SOURCES}) $(dir ${SDK_ASS_SOURCES})
 
@@ -62,6 +62,8 @@ LDLIBS=${SDKPATH}/platform/system_library/output/Keil_5/da14531.lib --specs=nano
 LDFLAGS=-mthumb -mcpu=cortex-m0plus -Wl,-T,firmware.lds -Wl,--gc-sections -Wl,-Map,output.map -L${SDKPATH}/common_project_files/misc
 
 CC=arm-none-eabi-gcc
+
+all: firmware.o
 
 firmware.o: firmware.bin
 	arm-none-eabi-objcopy -I binary -O elf32-littlearm --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@

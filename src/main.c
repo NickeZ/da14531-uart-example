@@ -65,25 +65,25 @@ int main(void) {
   uart_send_blocking_example(UART1);
 
   // Run UART1 send interrupt example
-  // uart_send_interrupt_example(UART1);
+  uart_send_interrupt_example(UART1);
 
 #if defined(CFG_UART_DMA_SUPPORT)
   // Run UART1 send dma example
   uart_send_dma_example(UART1);
 #endif
   // Run UART1 receive blocking example
-  // uart_receive_blocking_example(UART1);
+  uart_receive_blocking_example(UART1);
 
   // Run UART1 receive interrupt example
-  // uart_receive_interrupt_example(UART1);
+  uart_receive_interrupt_example(UART1);
 
 #if defined(CFG_UART_DMA_SUPPORT)
   // Run UART1 receive dma example
-  // uart_receive_dma_example(UART1);
+  uart_receive_dma_example(UART1);
 #endif
 
   // Run UART1 loopback example
-  // uart_loopback_interrupt_example(UART1);
+  uart_loopback_interrupt_example(UART1);
 
   while (1)
     ;

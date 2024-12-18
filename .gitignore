@@ -1,4 +1,4 @@
 *.o
 *.map
-firmware
 firmware.bin
+firmware.elf
