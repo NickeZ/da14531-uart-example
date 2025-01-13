@@ -37,7 +37,7 @@
 #include "uart_common.h"
 #include "uart_utils.h"
 
-#define READ_CHAR_COUNT 5
+#define READ_CHAR_COUNT 64
 
 static char buffer[READ_CHAR_COUNT + 1];
 
@@ -58,7 +58,9 @@ void uart_receive_blocking_example(uart_t *uart) {
   }
   printf_string(uart, "****************************************\n\r\n\r");
 
-  printf_string(uart, "Type 5 characters.\r\n");
+  printf_string(uart, "Type ");
+  printf_byte_dec(uart, READ_CHAR_COUNT);
+  printf_string(uart, " characters.\r\n");
 
   uart_receive(uart, (uint8_t *)buffer, READ_CHAR_COUNT, UART_OP_BLOCKING);
 
@@ -84,7 +86,9 @@ void uart_receive_interrupt_example(uart_t *uart) {
   data_received_cnt = 0;
   uart_register_rx_cb(uart, uart_receive_cb);
 
-  printf_string(uart, "Type 5 characters.\r\n");
+  printf_string(uart, "Type ");
+  printf_byte_dec(uart, READ_CHAR_COUNT);
+  printf_string(uart, " characters.\r\n");
 
   uart_receive(uart, (uint8_t *)buffer, READ_CHAR_COUNT, UART_OP_INTR);
   while (!uart_receive_finished)
@@ -112,7 +116,9 @@ void uart_receive_dma_example(uart_t *uart) {
   data_received_cnt = 0;
   uart_register_rx_cb(uart, uart_receive_cb);
 
-  printf_string(uart, "Type 5 characters.\r\n");
+  printf_string(uart, "Type ");
+  printf_byte_dec(uart, READ_CHAR_COUNT);
+  printf_string(uart, " characters.\r\n");
 
   uart_receive(uart, (uint8_t *)buffer, READ_CHAR_COUNT, UART_OP_DMA);
   while (!uart_receive_finished)
