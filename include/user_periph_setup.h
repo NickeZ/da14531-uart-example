@@ -49,12 +49,18 @@
  ****************************************************************************************
  */
 // bb02: 11 rx, 9 tx
+// #define UART1_TX_PORT GPIO_PORT_0
+// #define UART1_TX_PIN GPIO_PIN_0
+// #define UART1_RX_PORT GPIO_PORT_0
+// #define UART1_RX_PIN GPIO_PIN_1
+
+// usb-dev device (TX: 0, RX: 1, CTS: 3, RTS: 4)
 #define UART1_TX_PORT GPIO_PORT_0
 #define UART1_TX_PIN GPIO_PIN_0
 #define UART1_RX_PORT GPIO_PORT_0
 #define UART1_RX_PIN GPIO_PIN_1
-//
-// usb-dev device:
+
+// usb-dev device single (TX: 5, RX: 5)
 // #define UART1_TX_PORT GPIO_PORT_0
 // #define UART1_TX_PIN GPIO_PIN_5
 // #define UART1_RX_PORT GPIO_PORT_0

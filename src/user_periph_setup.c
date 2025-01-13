@@ -54,7 +54,7 @@ static const uart_cfg_t uart_cfg = {
     // Set stop bits
     .stop_bits = UART_STOPBITS_1,
     // Set flow control
-    .auto_flow_control = UART_AFCE_DIS,
+    .auto_flow_control = UART_AFCE_EN,
     // Set FIFO enable
     .use_fifo = UART_FIFO_EN,
     // Set Tx FIFO trigger level
@@ -73,7 +73,7 @@ static const uart_cfg_t uart_cfg = {
 
 void uart_periph_init(uart_t *uart) {
   // Turn of RST pin
-  *((uint32_t*)0x50000300) = 1;
+  *((uint32_t *)0x50000300) = 1;
 
   // Initialize UART
   uart_initialize(uart, &uart_cfg);
@@ -81,6 +81,9 @@ void uart_periph_init(uart_t *uart) {
   if (uart == UART1) {
     GPIO_ConfigurePin(UART1_TX_PORT, UART1_TX_PIN, OUTPUT, PID_UART1_TX, false);
     GPIO_ConfigurePin(UART1_RX_PORT, UART1_RX_PIN, INPUT, PID_UART1_RX, false);
+
+    GPIO_ConfigurePin(UART1_TX_PORT, 3, OUTPUT, PID_UART1_CTSN, false);
+    GPIO_ConfigurePin(UART1_RX_PORT, 4, INPUT, PID_UART1_RTSN, false);
   }
 
   // Enable the pads
