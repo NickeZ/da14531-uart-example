@@ -1,4 +1,4 @@
 *.o
 *.map
-firmware.bin
-firmware.elf
+bitbox-da14531-firmware.bin
+bitbox-da14531-firmware.elf

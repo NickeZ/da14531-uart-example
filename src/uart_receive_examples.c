@@ -41,8 +41,8 @@
 
 static char buffer[READ_CHAR_COUNT + 1];
 
-volatile bool uart_receive_finished = false;
-volatile uint16_t data_received_cnt = 0;
+volatile static bool uart_receive_finished = false;
+volatile static uint16_t data_received_cnt = 0;
 
 static void uart_receive_cb(uint16_t length) {
   data_received_cnt = length;

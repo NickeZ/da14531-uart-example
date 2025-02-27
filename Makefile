@@ -1,3 +1,5 @@
+PROJECT=bitbox-da14531-firmware
+
 SDKPATH=/opt/DA145xx_SDK/6.0.22.1401/sdk
 
 SDK_SOURCES=$(addprefix ${SDKPATH}/,\
@@ -18,7 +20,7 @@ SDK_ASS_SOURCES=$(addprefix ${SDKPATH}/platform/arch/boot/GCC/,ivtable_DA14531.S
 VPATH=src $(dir ${SDK_SOURCES}) $(dir ${SDK_ASS_SOURCES})
 
 SOURCES=\
-	$(addprefix src/,main.c ring_buffer.c uart_loopback_examples.c uart_receive_examples.c uart_send_examples.c user_periph_setup.c) \
+	$(addprefix src/,main.c ring_buffer.c uart_loopback_examples.c uart_receive_examples.c uart_send_examples.c user_periph_setup.c crc.c) \
 	${SDK_SOURCES}
 
 OBJECTS=$(notdir $(patsubst %.S,%.o,${SDK_ASS_SOURCES}) $(patsubst %.c,%.o,${SOURCES}))
@@ -63,19 +65,19 @@ LDFLAGS=-mthumb -mcpu=cortex-m0plus -Wl,-T,firmware.lds -Wl,--gc-sections -Wl,-M
 
 CC=arm-none-eabi-gcc
 
-all: firmware.o
+all: ${PROJECT}.o
 
-firmware.o: firmware.bin
+${PROJECT}.o: ${PROJECT}.bin
 	arm-none-eabi-objcopy -I binary -O elf32-littlearm --rename-section .data=.rodata,alloc,load,readonly,data,contents $< $@
 
-firmware.bin: firmware.elf
+${PROJECT}.bin: ${PROJECT}.elf
 	arm-none-eabi-objcopy -Obinary $< $@
 
-firmware.elf: ${OBJECTS}
+${PROJECT}.elf: ${OBJECTS}
 	${CC} ${LDFLAGS} -o $@ $^ ${LDLIBS}
 
 flash:
-	${MAKE} firmware.elf
+	${MAKE} ${PROJECT}.elf
 	JlinkExe -device da14531 -if SWD -speed 4000 -autoconnect 1 -CommandFile commands.jlink
 
 gdb-server:
@@ -85,10 +87,10 @@ jlink-cli:
 	JlinkExe -device da14531 -if SWD -speed 4000 -autoconnect 1
 
 run:
-	arm-none-eabi-gdb -x jlink.gdb firmware.elf
+	arm-none-eabi-gdb -x jlink.gdb ${PROJECT}.elf
 
 clean:
-	rm -f *.o firmware.elf firmware.bin firmware.o output.map
+	rm -f *.o ${PROJECT}.elf ${PROJECT}.bin ${PROJECT}.o output.map
 
 %.o : %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $(notdir $@)
